@@ -1,0 +1,53 @@
+/* src/components/LoadingSpinner.css */
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Size variations */
+  .spinner-container.small {
+    width: 20px;
+    height: 20px;
+  }
+  .spinner-container.medium {
+    width: 40px;
+    height: 40px;
+  }
+  .spinner-container.large {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .spinner {
+    animation: rotate 2s linear infinite;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .path {
+    stroke: #ffffff; /* White color for the spinner */
+    stroke-linecap: round;
+    animation: dash 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes dash {
+    0% {
+      stroke-dasharray: 1, 150;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -35;
+    }
+    100% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -124;
+    }
+  }
