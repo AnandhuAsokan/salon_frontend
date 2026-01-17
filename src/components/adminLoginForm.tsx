@@ -23,14 +23,14 @@ const LoginForm: React.FC = () => {
     setError(null);
 
     try {
-      const response = await api.post('/auth/user/login', credentials);
+      const response = await api.post('/auth/admin/login', credentials);
       const { token, user } = response.data;
       
       // Call the login function from context to update state
       login(token, user);
       
       // Redirect to the /todos page upon successful login
-      navigate('/services');
+      navigate('/adminDashboard');
 
     } catch (err: any) {
       setError(err.response?.data?.message || 'An unexpected error occurred.');
@@ -42,7 +42,7 @@ const LoginForm: React.FC = () => {
   // ... (rest of the component remains the same)
   return (
     <div className="login-form-container">
-      <h1>Welcome Back</h1>
+      <h1>Welcome Back ADMIN</h1>
       <p>Please log in to continue.</p>
       <form onSubmit={handleSubmit} className="login-form">
         {error && <p className="error-message">{error}</p>}

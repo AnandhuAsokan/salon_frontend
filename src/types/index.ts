@@ -28,3 +28,15 @@ export interface User {
     status: string;
     date: string;
   }
+
+  export interface Service {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  duration: number;
+  idealFor: string;
+  category: string;
+  isActive: boolean;
+  image?: string; 
+}

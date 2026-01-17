@@ -1,6 +1,6 @@
 // src/pages/LoginPage.tsx
 import React from 'react';
-import LoginForm from '../components/loginForm';
+import LoginForm from '../components/adminLoginForm';
 import './loginpage.css'; // Import the new CSS
 
 const LoginPage: React.FC = () => {

@@ -6,9 +6,8 @@ import api from '../services/api';
 import AddTodoModal from '../components/addToModal';
 import ViewEditTodoModal from '../components/viewEditTodoModal';
 import TodoTable from '../components/todoTable';
-import Pagination from '../components/Pagination';
+import Pagination from '../components/pagination.tsx';
 import './todoPage.css';
-import TodoFiltersValue from '../components/todoFilters';
 
 const TodosPage: React.FC = () => {
   const { user, logout } = useAuth();
