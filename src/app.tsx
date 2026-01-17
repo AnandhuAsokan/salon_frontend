@@ -4,8 +4,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/authContext';
 import ProtectedRoute from './components/protectedRoutes';
 import LoginPage from './pages/adminLoginPage';
-import DashboardPage from './pages/dashboard';
-import TodosPage from './pages/todosPage'; // <-- Import the new page
 import SignupPage from './pages/asminSign';
 import UserLogin from './pages/loginPage';
 import UserSignup from './pages/userSignup';
