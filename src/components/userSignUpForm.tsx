@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import  api  from '../services/api';
 import LoadingSpinner from './loadingSpinner';
@@ -46,15 +46,7 @@ const SignupForm: React.FC = () => {
     try {
       const { confirmPassword, ...payload } = credentials;
       const response = await api.post('/users/signup', payload);
-      
-      // Assuming your API returns a user/token. 
-      // If you want to force them to login, we don't call login() here.
-      // If you want to auto-login and redirect to todos, keep login() and navigate to /todos.
-      
-      // Since you requested redirect to LOGIN page, we skip the login() call:
-      // login(token, user); 
 
-      // Redirect to /login page
       navigate('/login'); 
 
     } catch (err: any) {
@@ -129,7 +121,6 @@ const SignupForm: React.FC = () => {
         </button>
       </form>
       
-      {/* Added Link to Login Page */}
       <div className="form-footer">
         <p>Already have an account? <Link to="/login">Login here</Link></p>
       </div>

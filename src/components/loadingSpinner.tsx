@@ -1,6 +1,5 @@
-// src/components/LoadingSpinner.tsx
 import React from 'react';
-import './LoadingSpinner.css'; // We'll create this CSS file
+import './LoadingSpinner.css';
 
 interface LoadingSpinnerProps {
   size?: 'small' | 'medium' | 'large';

@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import './ServicePage.css';
 
-// --- Interfaces ---
 
 interface Booking {
   _id: string;
   staffId: { name: string; _id: string };
   serviceId: { name: string; price: number; _id: string };
   customerName: string;
-  date: string; // Format: YYYY-MM-DD
+  date: string;
   startTime: string;
   endTime: string;
   status: string;
@@ -46,7 +45,6 @@ interface Staff {
   services: string[];
 }
 
-// --- Report Interfaces ---
 interface BusiestTime {
   time: string;
   bookings: number;
@@ -80,29 +78,24 @@ interface PeakTimeData {
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
 
-  // --- Navigation State ---
   const [activeTab, setActiveTab] = useState<'bookings' | 'staff' | 'services' | 'reports'>(
     'bookings'
   );
 
-  // --- Data States ---
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [reports, setReports] = useState<any>(null);
   const [availableServices, setAvailableServices] = useState<ServiceOption[]>([]);
 
-  // --- Filter States (Bookings) ---
   const [filterStatus, setFilterStatus] = useState<string>('All');
   const [filterStartDate, setFilterStartDate] = useState<string>('');
   const [filterEndDate, setFilterEndDate] = useState<string>('');
 
-  // --- Loading & Error States ---
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-  // --- Modal States ---
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
 
@@ -139,11 +132,10 @@ const AdminDashboard: React.FC = () => {
   };
 
   const convertToSlashDate = (date: string) => {
-    return date.replace(/-/g, '/'); // 2026-01-20 -> 2026/01/20
+    return date.replace(/-/g, '/');
   };
 
 
-  // --- Fetch Functions ---
   const fetchServiceOptions = async () => {
     try {
       const response = await api.get('/services/');
@@ -200,7 +192,6 @@ const AdminDashboard: React.FC = () => {
     setReportLoading('analytics');
     setAnalyticsData(null);
     try {
-      // API: POST '/bookings/analytics', Body: { startDate, endDate }
       const response = await api.post('/bookings/analytics', {
         startDate: analyticsDates.start,
         endDate: analyticsDates.end,
@@ -218,7 +209,6 @@ const AdminDashboard: React.FC = () => {
     setReportLoading('peak');
     setPeakTimeData(null);
     try {
-      // API: POST '/bookings/peak-time', Date passed via query
       const response = await api.post('/bookings/peak-time', {
         date: peakTimeDate,
       });
@@ -231,7 +221,6 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  // --- Effects ---
   useEffect(() => {
     fetchServiceOptions();
   }, []);
@@ -241,7 +230,6 @@ const AdminDashboard: React.FC = () => {
     if (activeTab === 'staff') fetchStaff();
     if (activeTab === 'services') fetchServices();
     if (activeTab === 'reports') {
-      // Optional: Auto-load reports with today's defaults when tab opens
       fetchAnalytics();
       fetchPeakTime();
     }
@@ -253,7 +241,6 @@ const AdminDashboard: React.FC = () => {
     if (!holidayDate) return alert("Please select a date");
     setIsSubmittingAction('holiday');
     try {
-      // API: POST 'staff/holiday' Payload: { date: "yyyy/mm/dd" }
       const payloadDate = convertToSlashDate(holidayDate);
       await api.post('/staff/holiday', { date: payloadDate });
       alert('Holiday added successfully.');
@@ -265,7 +252,6 @@ const AdminDashboard: React.FC = () => {
   const handleSetWeeklyOff = async () => {
     setIsSubmittingAction('weekly-off');
     try {
-      // API: POST 'staff/weekly-off' Payload: { "weekday": "monday" }
       await api.post('/staff/weekly-off', { weekday: weeklyOffDay });
       alert('Weekly off day updated successfully.');
     } catch (err: any) {
@@ -276,7 +262,6 @@ const AdminDashboard: React.FC = () => {
   const handleSetWorkingHours = async () => {
     setIsSubmittingAction('hours');
     try {
-      // API: POST 'staff/workingHours' Payload: { startTime: "09:00am", endTime: "09:00pm" }
       const formattedStart = convertToAmPm(workStartTime);
       const formattedEnd = convertToAmPm(workEndTime);
       
@@ -287,18 +272,13 @@ const AdminDashboard: React.FC = () => {
     } finally { setIsSubmittingAction(null); }
   };
 
-
-
-  // --- Handlers: Bookings ---
-
   const updateBookingStatus = async (bookingId: string, newStatus: string) => {
     if (!window.confirm(`Are you sure you want to mark this booking as ${newStatus}?`)) return;
 
     setActionLoading(bookingId);
     try {
-      // API: PATCH '/bookings/:id/status'
       await api.patch(`/bookings/${bookingId}/status`, { status: newStatus });
-      await fetchBookings(); // Refresh list
+      await fetchBookings();
       alert(`Booking marked as ${newStatus}.`);
     } catch (err: any) {
       console.error(err);
@@ -310,10 +290,8 @@ const AdminDashboard: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.reload(); // Force reload to clear state and redirect
+    window.location.reload();
   };
-
-  // --- Handlers: Service & Staff (Kept from previous) ---
 
   const openServiceModal = (service?: Service) => {
     if (service) {
@@ -431,13 +409,10 @@ const AdminDashboard: React.FC = () => {
     });
   };
 
-  // --- Filter Logic ---
   const filteredBookings = bookings.filter(booking => {
-    // Status Filter
     const statusMatch =
       filterStatus === 'All' || booking.status.toLowerCase() === filterStatus.toLowerCase();
 
-    // Date Range Filter (Assuming booking.date is 'YYYY-MM-DD')
     let dateMatch = true;
     if (filterStartDate) dateMatch = dateMatch && booking.date >= filterStartDate;
     if (filterEndDate) dateMatch = dateMatch && booking.date <= filterEndDate;
@@ -476,10 +451,8 @@ const AdminDashboard: React.FC = () => {
           <div className="error">{error}</div>
         ) : (
           <>
-            {/* TAB: BOOKINGS */}
             {activeTab === 'bookings' && (
               <div className="tab-content">
-                {/* Filters Section */}
                 <div className="filters-bar">
                   <div className="filter-group">
                     <label>Status:</label>
@@ -510,7 +483,6 @@ const AdminDashboard: React.FC = () => {
                   </div>
                 </div>
 
-                {/* List */}
                 <div className="history-list-container">
                   {filteredBookings.length === 0 ? (
                     <div className="empty-state">No bookings match your filters.</div>
@@ -607,10 +579,8 @@ const AdminDashboard: React.FC = () => {
               </div>
             )}
 
-            {/* TAB: STAFF */}
             {activeTab === 'staff' && (
               <div className="tab-content">
-                {/* --- NEW STAFF CONTROLS (Top Right) --- */}
                 <div className="staff-controls-bar">
                   <div className="control-group">
                     <label>Add Holiday</label>
@@ -655,20 +625,8 @@ const AdminDashboard: React.FC = () => {
               </div>
             )}
 
-            {/* TAB: REPORTS */}
-
-            {/* {activeTab === 'reports' && ( 
-            //   <div className="tab-content">
-            //      <div className="reports-placeholder">
-            //        <h2>Analytics & Reports</h2>
-            //        <pre>{JSON.stringify(reports, null, 2)}</pre>
-            //      </div>
-            //   </div>
-              )} */}
-
             {activeTab === 'reports' && (
               <div className="tab-content reports-wrapper">
-                {/* Report 1: Analytics */}
                 <div className="report-section">
                   <h3>Booking Analytics</h3>
                   <div className="report-controls">
@@ -739,7 +697,6 @@ const AdminDashboard: React.FC = () => {
                   )}
                 </div>
 
-                {/* Report 2: Peak Time */}
                 <div className="report-section">
                   <h3>Daily Peak Time Analysis</h3>
                   <div className="report-controls">
@@ -816,9 +773,7 @@ const AdminDashboard: React.FC = () => {
         )}
       </div>
 
-      {/* --- MODALS (Service & Staff) - Unchanged from previous step for brevity --- */}
 
-      {/* --- SERVICE MODAL --- */}
       {isServiceModalOpen && editingService && (
         <div className="modal-overlay" onClick={() => setIsServiceModalOpen(false)}>
           <div className="modal-container edit-modal" onClick={e => e.stopPropagation()}>
@@ -915,7 +870,6 @@ const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* --- STAFF MODAL --- */}
       {isStaffModalOpen && editingStaff && (
         <div className="modal-overlay" onClick={() => setIsStaffModalOpen(false)}>
           <div className="modal-container edit-modal" onClick={e => e.stopPropagation()}>

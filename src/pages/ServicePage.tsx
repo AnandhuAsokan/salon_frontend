@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { Service } from '../types';
 import './ServicePage.css';
@@ -13,17 +13,12 @@ interface SlotData {
 }
 
 const ServicesPage: React.FC = () => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
-  // --- Service List State ---
   const [services, setServices] = useState<Service[]>([]);
   const [isLoadingServices, setIsLoadingServices] = useState(true);
   const [serviceError, setServiceError] = useState<string | null>(null);
-
-  // --- Profile State ---
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  
-  // --- Booking Modal State ---
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>('');
@@ -38,7 +33,6 @@ const ServicesPage: React.FC = () => {
   } | null>(null);
   const [isBooking, setIsBooking] = useState(false);
 
-  // --- Initial Load ---
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -55,9 +49,6 @@ const ServicesPage: React.FC = () => {
     fetchServices();
   }, []);
 
-  // --- Handlers ---
-
-  // 1. Open Modal for Booking
   const handleBookNowClick = (service: Service) => {
     setSelectedService(service);
     setSelectedDate('');
@@ -67,7 +58,6 @@ const ServicesPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  // 2. Fetch Slots
   const handleConfirmDate = async () => {
     if (!selectedService || !selectedDate) return;
 
@@ -79,7 +69,7 @@ const ServicesPage: React.FC = () => {
     try {
       const response = await api.post('/services/staff-slots', {
         serviceId: selectedService._id,
-        date: selectedDate, 
+        date: selectedDate,
       });
       setSlotsData(response.data.data);
     } catch (err: any) {
@@ -90,12 +80,10 @@ const ServicesPage: React.FC = () => {
     }
   };
 
-  // 3. Select Slot
   const handleSlotSelect = (staffId: string, staffName: string, timeSlot: string, date: string) => {
     setSelectedSlot({ staffId, staffName, timeSlot, date });
   };
 
-  // 4. Final Booking
   const handleFinalBooking = async () => {
     if (!selectedSlot || !selectedService) return;
 
@@ -109,20 +97,19 @@ const ServicesPage: React.FC = () => {
       };
 
       await api.post('/bookings', payload);
-      
+
       confetti({
         particleCount: 200,
         spread: 70,
         origin: { y: 0.6 },
         zIndex: 2000,
-        colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+        colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'],
       });
 
       setTimeout(() => {
-        alert("Booking Confirmed Successfully!");
+        alert('Booking Confirmed Successfully!');
         setIsModalOpen(false);
       }, 1000);
-      
     } catch (err: any) {
       console.error(err);
       alert(err.response?.data?.message || 'Booking failed. Please try again.');
@@ -131,24 +118,20 @@ const ServicesPage: React.FC = () => {
     }
   };
 
-  // 5. Profile Menu Actions
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
 
-  // Navigate to History Page
   const handleOpenHistory = () => {
     setIsProfileMenuOpen(false);
     navigate('/booking-history');
   };
 
-  // Logout
   const handleLogout = () => {
-    localStorage.clear(); 
+    localStorage.clear();
     window.location.reload();
   };
 
-  // Helper for Date constraints
   const getTodayString = () => new Date().toISOString().split('T')[0];
   const getMaxDateString = () => {
     const date = new Date();
@@ -161,10 +144,19 @@ const ServicesPage: React.FC = () => {
 
   return (
     <div className="services-page">
-      {/* --- Profile Icon --- */}
       <div className="profile-wrapper">
         <div className="profile-icon" onClick={toggleProfileMenu}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
@@ -172,8 +164,12 @@ const ServicesPage: React.FC = () => {
 
         {isProfileMenuOpen && (
           <div className="dropdown-menu">
-            <div className="dropdown-item" onClick={handleOpenHistory}>Booking History</div>
-            <div className="dropdown-item logout" onClick={handleLogout}>Logout</div>
+            <div className="dropdown-item" onClick={handleOpenHistory}>
+              Booking History
+            </div>
+            <div className="dropdown-item logout" onClick={handleLogout}>
+              Logout
+            </div>
           </div>
         )}
       </div>
@@ -184,22 +180,25 @@ const ServicesPage: React.FC = () => {
       </div>
 
       <div className="services-grid">
-        {services.map((service) => (
+        {services.map(service => (
           <div key={service._id} className="service-card">
             <div className="service-image-container">
-              <img 
-                src={`https://source.unsplash.com/400x250/?${service.category.toLowerCase()},haircut`} 
-                alt={service.name} 
+              <img
+                src={`https://source.unsplash.com/400x250/?${service.category.toLowerCase()},haircut`}
+                alt={service.name}
                 className="service-image"
-                onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x250?text=No+Image'; }}
+                onError={e => {
+                  (e.target as HTMLImageElement).src =
+                    'https://via.placeholder.com/400x250?text=No+Image';
+                }}
               />
               <span className="service-category-badge">{service.category}</span>
             </div>
-            
+
             <div className="service-content">
               <h3 className="service-name">{service.name}</h3>
               <p className="service-description">{service.description}</p>
-              
+
               <div className="service-meta">
                 <span className="meta-item">⏱ {service.duration} min</span>
                 <span className="meta-item">👤 {service.idealFor}</span>
@@ -207,10 +206,7 @@ const ServicesPage: React.FC = () => {
 
               <div className="service-footer">
                 <span className="service-price">${service.price}</span>
-                <button 
-                  className="book-btn"
-                  onClick={() => handleBookNowClick(service)}
-                >
+                <button className="book-btn" onClick={() => handleBookNowClick(service)}>
                   Book Now
                 </button>
               </div>
@@ -219,30 +215,31 @@ const ServicesPage: React.FC = () => {
         ))}
       </div>
 
-      {/* --- BOOKING MODAL --- */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
-          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-container" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h2>Book Appointment</h2>
-              <button className="close-btn" onClick={() => setIsModalOpen(false)}>×</button>
+              <button className="close-btn" onClick={() => setIsModalOpen(false)}>
+                ×
+              </button>
             </div>
-            
+
             <div className="modal-body">
               <div className="booking-step">
                 <label htmlFor="date-input">Select Date:</label>
-                <input 
-                  type="date" 
+                <input
+                  type="date"
                   id="date-input"
-                  min={getTodayString()} 
-                  max={getMaxDateString()} 
+                  min={getTodayString()}
+                  max={getMaxDateString()}
                   value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
+                  onChange={e => setSelectedDate(e.target.value)}
                   className="date-input"
                 />
                 {!slotsData.length && (
-                   <button 
-                    className="btn-primary" 
+                  <button
+                    className="btn-primary"
                     onClick={handleConfirmDate}
                     disabled={!selectedDate || isLoadingSlots}
                   >
@@ -256,22 +253,30 @@ const ServicesPage: React.FC = () => {
               {slotsData.length > 0 && (
                 <div className="slots-container">
                   <h3>Available Slots for {selectedDate}</h3>
-                  
-                  {slotsData.map((staffGroup) => (
+
+                  {slotsData.map(staffGroup => (
                     <div key={staffGroup.staffId} className="staff-slots-group">
                       <div className="staff-divider">
                         <span className="staff-badge">{staffGroup.name}</span>
                       </div>
-                      
+
                       <div className="slots-grid">
                         {staffGroup.slots.map((slot, index) => {
-                          const isSelected = selectedSlot?.staffId === staffGroup.staffId && 
-                                            selectedSlot?.timeSlot === slot;
+                          const isSelected =
+                            selectedSlot?.staffId === staffGroup.staffId &&
+                            selectedSlot?.timeSlot === slot;
                           return (
                             <button
                               key={index}
                               className={`slot-chip ${isSelected ? 'selected' : ''}`}
-                              onClick={() => handleSlotSelect(staffGroup.staffId, staffGroup.name, slot, staffGroup.date)}
+                              onClick={() =>
+                                handleSlotSelect(
+                                  staffGroup.staffId,
+                                  staffGroup.name,
+                                  slot,
+                                  staffGroup.date
+                                )
+                              }
                             >
                               {slot}
                             </button>
@@ -287,9 +292,12 @@ const ServicesPage: React.FC = () => {
             {selectedSlot && (
               <div className="modal-footer">
                 <div className="selection-summary">
-                  <p>Selected: <strong>{selectedSlot.timeSlot}</strong> with <strong>{selectedSlot.staffName}</strong></p>
+                  <p>
+                    Selected: <strong>{selectedSlot.timeSlot}</strong> with{' '}
+                    <strong>{selectedSlot.staffName}</strong>
+                  </p>
                 </div>
-                <button 
+                <button
                   className="btn-confirm-booking"
                   onClick={handleFinalBooking}
                   disabled={isBooking}

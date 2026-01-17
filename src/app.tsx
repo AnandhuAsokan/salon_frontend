@@ -22,7 +22,6 @@ function App() {
           <Route path="/login" element={<UserLogin />} />
           <Route path="/signup" element={<UserSignup />} />
 
-          {/* All routes below are protected */}
           <Route element={<ProtectedRoute />}>
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/service-details/:serviceId" element={<ServiceDetailPage />} />
@@ -30,10 +29,8 @@ function App() {
             <Route path="/adminDashboard" element={<AdminDashboard />} />
           </Route>
 
-          {/* Default route will redirect to the dashboard */}
           <Route path="/" element={<Navigate to="/signup" />} />
 
-          {/* Any other unknown route will redirect to the login page */}
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </Router>

@@ -1,13 +1,12 @@
-// src/components/LoginForm.tsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // <-- Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { LoginCredentials } from '../types';
 import api from '../services/api';
 import LoadingSpinner from './loadingSpinner';
 
 const LoginForm: React.FC = () => {
-  const navigate = useNavigate(); // <-- Initialize useNavigate
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState<LoginCredentials>({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,10 +25,8 @@ const LoginForm: React.FC = () => {
       const response = await api.post('/auth/user/login', credentials);
       const { token, user } = response.data;
       
-      // Call the login function from context to update state
       login(token, user);
       
-      // Redirect to the /todos page upon successful login
       navigate('/services');
 
     } catch (err: any) {
@@ -39,7 +36,6 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  // ... (rest of the component remains the same)
   return (
     <div className="login-form-container">
       <h1>Welcome Back</h1>

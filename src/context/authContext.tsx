@@ -1,4 +1,3 @@
-// src/context/AuthContext.tsx
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { User } from '../types';
 import api from '../services/api';
@@ -21,23 +20,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(newUser);
     setToken(newToken);
     localStorage.setItem('authToken', newToken);
-    api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`; // Set token for axios requests
+    api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
     localStorage.removeItem('authToken');
-    delete api.defaults.headers.common['Authorization']; // Remove token from axios defaults
+    delete api.defaults.headers.common['Authorization'];
   };
 
-  // Check for token on initial load
   useEffect(() => {
     if (token) {
-      // In a real app, you might want to validate the token with a backend call
-      // For this example, we'll just set the axios header
+
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      // You could also decode the JWT to get user info without a backend call
+
     }
   }, [token]);
 

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import './ServicePage.css'; // Reusing existing styles, extending them below
+import './ServicePage.css';
 
-// Define types based on the JSON response provided
 interface StaffService {
   _id: string;
   name: string;
@@ -18,7 +17,7 @@ interface Staff {
   name: string;
   age: number;
   gender: string;
-  ratings: number[]; // Assuming ratings is an array of numbers
+  ratings: number[];
   reviews: string[];
   services: StaffService[];
   status: string;
@@ -42,10 +41,7 @@ const ServiceDetailPage: React.FC = () => {
         const staffData = response.data.data;
         setStaffs(staffData);
 
-        // Extract service details from the first staff member to display the service info
-        // (Since all staff returned perform this specific service)
         if (staffData.length > 0 && staffData[0].services.length > 0) {
-          // Find the specific service object matching the ID
           const serviceInfo = staffData[0].services.find((s:any) => s._id === serviceId);
           setSelectedService(serviceInfo || staffData[0].services[0]);
         }
@@ -61,14 +57,12 @@ const ServiceDetailPage: React.FC = () => {
     fetchStaffs();
   }, [serviceId]);
 
-  // Helper to calculate average rating
   const getAverageRating = (ratings: number[]) => {
     if (!ratings || ratings.length === 0) return 0;
     const sum = ratings.reduce((a, b) => a + b, 0);
     return (sum / ratings.length).toFixed(1);
   };
 
-  // Helper to render stars
   const renderStars = (ratings: number[]) => {
     const avg = parseFloat(getAverageRating(ratings as number[]).toString());
     const stars = [];
@@ -83,14 +77,12 @@ const ServiceDetailPage: React.FC = () => {
   };
 
   const handleSelectStaff = (staffId: string) => {
-    // Logic to call the next API request or navigate to booking page
     console.log(`Selected Staff ID: ${staffId}`);
-    // Example: navigate(`/booking/${serviceId}/${staffId}`);
     alert(`Staff selected! ID: ${staffId}. Here you would call your next API.`);
   };
 
   const handleBack = () => {
-    navigate(-1); // Go back to previous page
+    navigate(-1);
   };
 
   if (isLoading) return <div className="loading">Loading availability...</div>;
@@ -100,7 +92,6 @@ const ServiceDetailPage: React.FC = () => {
     <div className="service-detail-page">
       <button className="back-btn" onClick={handleBack}>← Back to Services</button>
       
-      {/* Service Description Header */}
       {selectedService && (
         <div className="service-header-detail">
           <h1>{selectedService.name}</h1>
@@ -119,7 +110,6 @@ const ServiceDetailPage: React.FC = () => {
         {staffs.map((staff) => (
           <div key={staff._id} className="staff-card">
             <div className="staff-header">
-                {/* Placeholder avatar using name initials or random image */}
                 <img 
                     src={`https://ui-avatars.com/api/?name=${staff.name}&background=random&color=fff`} 
                     alt={staff.name} 
@@ -140,7 +130,6 @@ const ServiceDetailPage: React.FC = () => {
                 </div>
             </div>
 
-            {/* Display latest review if exists */}
             {staff.reviews && staff.reviews.length > 0 && (
                 <div className="staff-review-snippet">
                     <p>"{staff.reviews[staff.reviews.length - 1]}"</p>

@@ -1,11 +1,9 @@
-/* src/components/LoadingSpinner.css */
 .spinner-container {
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
-  /* Size variations */
   .spinner-container.small {
     width: 20px;
     height: 20px;
@@ -26,7 +24,7 @@
   }
   
   .path {
-    stroke: #ffffff; /* White color for the spinner */
+    stroke: #ffffff;
     stroke-linecap: round;
     animation: dash 1.5s ease-in-out infinite;
   }
