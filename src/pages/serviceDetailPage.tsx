@@ -111,7 +111,7 @@ const ServiceDetailPage: React.FC = () => {
           <div key={staff._id} className="staff-card">
             <div className="staff-header">
                 <img 
-                    src={`https://ui-avatars.com/api/?name=${staff.name}&background=random&color=fff`} 
+                    src={`https://t4.ftcdn.net/jpg/04/69/68/17/360_F_469681744_FZWt6LKXLoCU4XVv8Cjx6ZFmwNlNLm7x.jpg`} 
                     alt={staff.name} 
                     className="staff-avatar"
                 />

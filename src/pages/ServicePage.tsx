@@ -184,7 +184,7 @@ const ServicesPage: React.FC = () => {
           <div key={service._id} className="service-card">
             <div className="service-image-container">
               <img
-                src={`https://source.unsplash.com/400x250/?${service.category.toLowerCase()},haircut`}
+                src={`https://t4.ftcdn.net/jpg/04/69/68/17/360_F_469681744_FZWt6LKXLoCU4XVv8Cjx6ZFmwNlNLm7x.jpg`}
                 alt={service.name}
                 className="service-image"
                 onError={e => {
